@@ -1,0 +1,292 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Outfit:wght@500;700&display=swap');
+
+body {
+  @apply bg-cinema-black text-cinema-white font-sans antialiased;
+}
+
+/* Custom Scrollbar */
+::-webkit-scrollbar {
+  width: 8px;
+}
+::-webkit-scrollbar-track {
+  @apply bg-cinema-black;
+}
+::-webkit-scrollbar-thumb {
+  @apply bg-cinema-dark rounded-full;
+}
+::-webkit-scrollbar-thumb:hover {
+  @apply bg-cinema-gray;
+}
+
+
+.CinemaPlan {
+  text-align: center;
+  display: flex;
+  flex-flow: column;
+  align-items: center;
+}
+
+.Movies {
+  margin-bottom: 24px;
+}
+
+
+.ShowCase {
+  padding: 0;
+  list-style: none;
+  display: flex;
+  justify-content: center;
+  padding: 12px;
+  border-radius: 4px;
+}
+
+.ShowCase li {
+  margin: 0 12px;
+}
+
+.Cinema {
+  margin-bottom: 18px;
+  perspective: 400px;
+
+  display: grid;
+  place-items: center;
+  grid-gap: 24px;
+}
+
+.Cinema .screen {
+  height: 80px;
+  background: white;
+  width: 100%;
+  transform: rotateX(-30deg) scale(1.2);
+  box-shadow: 0 3px 10px 2px;
+}
+
+.Cinema .seats {
+  display: grid;
+  grid-gap: 6px;
+  grid-template-columns: repeat(8, min-content);
+  align-items: center;
+}
+
+.Cinema .seats .seat:nth-of-type(8n + 2) {
+  margin-right: 12px;
+}
+
+.Cinema .seats .seat:nth-of-type(8n + 6) {
+  margin-right: 12px;
+}
+
+.Cinema .seats .seat:not(.occupied):hover,
+.Cinema .seats .seat:not(.occupied):focus {
+  cursor: pointer;
+  background: #95CB18;
+  transform: scale(1.2);
+}
+
+.Cinema .seats .seat.selected::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 2px;
+  width: 12px;
+  height: 12px;
+  border-radius: 100%;
+  background: transparent;
+  border: 1px solid #2ECC71;
+  animation: show-off 0.8s;
+  visibility: hidden;
+}
+
+@keyframes show-off {
+  0% {
+    transform: scale(1);
+    opacity: 1;
+    visibility: visible;
+  }
+
+  100% {
+    transform: scale(3);
+    opacity: 0;
+  }
+}
+
+.seat {
+  display: inline-block;
+  background: #FFCE20;
+  width: 16px;
+  height: 12px;
+  border-top-left-radius: 10px;
+  border-top-right-radius: 10px;
+  transition: transform 0.3s ease-in-out;
+
+  position: relative;
+  top: 1px;
+}
+
+.seat.selected {
+  background: #2ECC71 !important;
+}
+
+.seat.occupied {
+  background: #FF3A1E;
+}
+
+.seat.recommended {
+  background: #A020F0;
+}
+
+.info .count {
+  color: #2ECC71;
+}
+
+.info .total {
+  color: #2ECC71;
+}
+
+.info .selected-seats {
+  color: #2ECC71;
+}
+
+/* QR Code and Animation Styles */
+@keyframes fade-in {
+  from {
+    opacity: 0;
+    transform: translateY(-20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes bounce-in {
+  0% {
+    opacity: 0;
+    transform: scale(0.3);
+  }
+  50% {
+    opacity: 1;
+    transform: scale(1.05);
+  }
+  70% {
+    transform: scale(0.9);
+  }
+  100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+.animate-fade-in {
+  animation: fade-in 0.5s ease-out;
+}
+
+.animate-bounce-in {
+  animation: bounce-in 0.6s ease-out;
+}
+
+/* Enhanced Theater Styles */
+@keyframes screenShimmer {
+  0% {
+    transform: translateX(-100%);
+  }
+  100% {
+    transform: translateX(100%);
+  }
+}
+
+@keyframes shrink {
+  0% {
+    width: 100%;
+  }
+  100% {
+    width: 0%;
+  }
+}
+
+/* Cinema Seat Enhancements */
+.cinema-seat {
+  position: relative;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.cinema-seat:hover {
+  transform: translateY(-2px) scale(1.05);
+  filter: brightness(1.1);
+}
+
+.cinema-seat:active {
+  transform: translateY(0) scale(0.98);
+}
+
+/* Realistic seat armrests */
+.cinema-seat::before,
+.cinema-seat::after {
+  content: '';
+  position: absolute;
+  top: 15%;
+  width: 8px;
+  height: 60%;
+  border-radius: 4px;
+  background: inherit;
+  opacity: 0.7;
+  transition: all 0.3s ease;
+}
+
+.cinema-seat::before {
+  left: -6px;
+}
+
+.cinema-seat::after {
+  right: -6px;
+}
+
+/* Perspective for 3D screen effect */
+.perspective-1000 {
+  perspective: 1000px;
+}
+
+/* LED Screen Enhancements */
+.screen {
+  box-shadow: 
+    0 25px 60px rgba(0, 0, 0, 0.4),
+    0 15px 40px rgba(0, 0, 0, 0.3),
+    inset 0 2px 10px rgba(255, 255, 255, 0.1),
+    0 0 50px rgba(59, 130, 246, 0.2);
+}
+
+/* LED Screen Glow Animation */
+@keyframes screenGlow {
+  0% {
+    opacity: 0.1;
+    filter: hue-rotate(0deg);
+  }
+  50% {
+    opacity: 0.3;
+    filter: hue-rotate(180deg);
+  }
+  100% {
+    opacity: 0.1;
+    filter: hue-rotate(360deg);
+  }
+}
+
+/* Ambient LED Lighting */
+@keyframes ambientGlow {
+  0% {
+    opacity: 0.05;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 0.15;
+    transform: scale(1.02);
+  }
+  100% {
+    opacity: 0.05;
+    transform: scale(1);
+  }
+}
