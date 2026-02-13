@@ -322,18 +322,23 @@ function SeatPlan({ movie }) {
         )}
       </div>
 
-      <div className='CinemaPlan max-w-5xl mx-auto'>
-        <SeatSelector
-          movie={{ ...movies[0], occupied: occupiedSeats }}
-          selectedSeats={selectedSeats}
-          recommendedSeat={recommendedSeat}
-          onSelectedSeatsChange={(selectedSeats) =>
-            setSelectedSeats(selectedSeats)
-          }
-          onRecommendedSeatChange={(recommendedSeat) =>
-            setRecommendedSeat(recommendedSeat)
-          }
-        />
+      <div className='CinemaPlan max-w-5xl mx-auto w-full'>
+        {/* Mobile-friendly seat container with horizontal scroll */}
+        <div className="w-full overflow-x-auto pb-8 pt-4 px-4 scrollbar-hide">
+          <div className="min-w-max mx-auto">
+            <SeatSelector
+              movie={{ ...movies[0], occupied: occupiedSeats }}
+              selectedSeats={selectedSeats}
+              recommendedSeat={recommendedSeat}
+              onSelectedSeatsChange={(selectedSeats) =>
+                setSelectedSeats(selectedSeats)
+              }
+              onRecommendedSeatChange={(recommendedSeat) =>
+                setRecommendedSeat(recommendedSeat)
+              }
+            />
+          </div>
+        </div>
         <SeatShowcase />
 
         <div className='info mb-8 p-6 bg-cinema-dark rounded-2xl border border-cinema-gray/10 shadow-xl'>
