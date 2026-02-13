@@ -1,4 +1,5 @@
 import React, { useState, useRef, useEffect } from 'react';
+import { getGroqResponse } from '../utils/groqService';
 
 const ChatBot = () => {
   const [isOpen, setIsOpen] = useState(false);
@@ -6,6 +7,7 @@ const ChatBot = () => {
     { text: "Hi! I'm your CinemaMate AI Assistant. 🎬 How can I help you today?", isBot: true }
   ]);
   const [inputValue, setInputValue] = useState("");
+  const [isTyping, setIsTyping] = useState(false);
   const messagesEndRef = useRef(null);
 
   const scrollToBottom = () => {
@@ -14,9 +16,9 @@ const ChatBot = () => {
 
   useEffect(() => {
     scrollToBottom();
-  }, [messages]);
+  }, [messages, isTyping]);
 
-  const handleSendMessage = (e) => {
+  const handleSendMessage = async (e) => {
     e.preventDefault();
     if (!inputValue.trim()) return;
 
@@ -24,38 +26,24 @@ const ChatBot = () => {
     const newMessages = [...messages, { text: inputValue, isBot: false }];
     setMessages(newMessages);
     setInputValue("");
+    setIsTyping(true);
 
-    // Simulate AI response
-    setTimeout(() => {
-      const botResponse = getBotResponse(inputValue);
-      setMessages(prev => [...prev, { text: botResponse, isBot: true }]);
-    }, 1000);
-  };
+    // Call Groq AI
+    // Context: Hardcoded for now, but could be dynamic from props/store
+    const context = `
+      Cinema Name: CinemaMate
+      Location: Mumbai, India
+      Ticket Prices: Silver (₹150), Gold (₹200), Premium (₹300)
+      Current Movies: Jawan (Action), Oppenheimer (Drama), Gadar 2 (Action)
+      Show Timings: 10:00 AM, 1:00 PM, 4:00 PM, 7:00 PM, 10:00 PM
+      Food: Popcorn (₹150), Nachos (₹200), Coke (₹100)
+      Offers: Use code GOLD10 for 10% off on Gold seats.
+    `;
 
-  // Mock AI Logic (Rule-based)
-  const getBotResponse = (input) => {
-    const lowerInput = input.toLowerCase();
+    const botResponse = await getGroqResponse(inputValue, context);
     
-    if (lowerInput.includes('hello') || lowerInput.includes('hi')) {
-      return "Hello movie buff! Ready to book some tickets?";
-    }
-    if (lowerInput.includes('price') || lowerInput.includes('cost')) {
-      return "Tickets range from ₹150 (Silver) to ₹300 (Premium). Gold class is ₹200.";
-    }
-    if (lowerInput.includes('book') || lowerInput.includes('ticket')) {
-      return "You can book tickets by clicking on any movie poster on the home page!";
-    }
-    if (lowerInput.includes('offer') || lowerInput.includes('discount')) {
-      return "We currently have a 10% discount for Gold Class seats! Use code GOLD10.";
-    }
-    if (lowerInput.includes('time') || lowerInput.includes('show')) {
-      return "Show timings are usually 10:00 AM, 1:00 PM, 4:00 PM, and 7:00 PM. Check the movie details for specifics.";
-    }
-    if (lowerInput.includes('food') || lowerInput.includes('snack')) {
-      return "We have popcorn 🍿, nachos, and cold drinks available at the counter.";
-    }
-    
-    return "I'm still learning! Try asking about prices, booking, or show timings. 🎥";
+    setMessages(prev => [...prev, { text: botResponse, isBot: true }]);
+    setIsTyping(false);
   };
 
   return (
@@ -96,6 +84,13 @@ const ChatBot = () => {
                 </div>
               </div>
             ))}
+            {isTyping && (
+              <div className="flex justify-start">
+                 <div className="bg-cinema-dark/80 text-cinema-gray text-xs p-3 rounded-xl rounded-tl-none border border-cinema-gray/20 animate-pulse">
+                   Thinking...
+                 </div>
+              </div>
+            )}
             <div ref={messagesEndRef} />
           </div>
 
