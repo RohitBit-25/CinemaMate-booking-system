@@ -148,9 +148,79 @@ const AdminDashboard = () => {
         )}
 
         {activeTab === 'movies' && (
-           <div className="text-center py-20 animate-fade-in">
-             <h2 className="text-2xl text-cinema-gray">Movie Management Implementation Pending...</h2>
-             {/* This section will be implemented in the next step */}
+           <div className="space-y-8 animate-fade-in">
+             <div className="flex justify-between items-center">
+               <h2 className="text-2xl font-bold">Movie Management</h2>
+               <button className="bg-cinema-gold text-cinema-black px-6 py-2 rounded-xl font-bold shadow-lg hover:bg-yellow-400 transition-colors">
+                 + Add New Movie
+               </button>
+             </div>
+
+             {/* Movie List Table */}
+             <div className="bg-cinema-dark rounded-2xl border border-cinema-gray/10 overflow-hidden">
+               <table className="w-full text-left">
+                 <thead className="bg-cinema-black/50 text-cinema-gray uppercase text-xs font-bold">
+                   <tr>
+                     <th className="p-4">Movie</th>
+                     <th className="p-4">Genre</th>
+                     <th className="p-4">Language</th>
+                     <th className="p-4">Status</th>
+                     <th className="p-4 text-right">Actions</th>
+                   </tr>
+                 </thead>
+                 <tbody className="divide-y divide-cinema-gray/10">
+                   {[
+                     { id: 1, title: 'Jawan', genre: 'Action, Thriller', lang: 'Hindi', status: 'Active' },
+                     { id: 2, title: 'Oppenheimer', genre: 'Biography, Drama', lang: 'English', status: 'Active' },
+                     { id: 3, title: 'Gadar 2', genre: 'Action, Drama', lang: 'Hindi', status: 'Active' },
+                     { id: 4, title: 'Dream Girl 2', genre: 'Comedy', lang: 'Hindi', status: 'Coming Soon' },
+                   ].map((movie) => (
+                     <tr key={movie.id} className="hover:bg-white/5 transition-colors">
+                       <td className="p-4 font-bold text-white">{movie.title}</td>
+                       <td className="p-4 text-cinema-gray">{movie.genre}</td>
+                       <td className="p-4 text-cinema-gray">{movie.lang}</td>
+                       <td className="p-4">
+                         <span className={`px-2 py-1 rounded text-xs font-bold ${movie.status === 'Active' ? 'bg-green-500/20 text-green-400' : 'bg-yellow-500/20 text-yellow-400'}`}>
+                           {movie.status}
+                         </span>
+                       </td>
+                       <td className="p-4 text-right space-x-2">
+                         <button className="text-blue-400 hover:text-blue-300">✏️</button>
+                         <button className="text-red-400 hover:text-red-300">🗑️</button>
+                       </td>
+                     </tr>
+                   ))}
+                 </tbody>
+               </table>
+             </div>
+
+             {/* Add Movie Form (Mock UI) */}
+             <div className="bg-cinema-dark/50 p-6 rounded-2xl border border-cinema-gray/10 mt-8">
+               <h3 className="text-xl font-bold mb-4 text-cinema-gold">Add New Movie</h3>
+               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                 <div>
+                   <label className="block text-cinema-gray text-sm mb-2">Movie Title</label>
+                   <input type="text" className="w-full bg-cinema-black border border-cinema-gray/30 rounded-lg p-3 text-white focus:border-cinema-gold outline-none" placeholder="e.g. Dunki" />
+                 </div>
+                 <div>
+                   <label className="block text-cinema-gray text-sm mb-2">Poster URL</label>
+                   <input type="text" className="w-full bg-cinema-black border border-cinema-gray/30 rounded-lg p-3 text-white focus:border-cinema-gold outline-none" placeholder="https://..." />
+                 </div>
+                 <div>
+                   <label className="block text-cinema-gray text-sm mb-2">Genre</label>
+                   <input type="text" className="w-full bg-cinema-black border border-cinema-gray/30 rounded-lg p-3 text-white focus:border-cinema-gold outline-none" placeholder="Action, Drama" />
+                 </div>
+                 <div>
+                   <label className="block text-cinema-gray text-sm mb-2">Release Date</label>
+                   <input type="date" className="w-full bg-cinema-black border border-cinema-gray/30 rounded-lg p-3 text-white focus:border-cinema-gold outline-none" />
+                 </div>
+               </div>
+               <div className="mt-6 flex justify-end">
+                 <button className="bg-cinema-red hover:bg-red-700 text-white px-8 py-3 rounded-xl font-bold transition-all shadow-lg shadow-cinema-red/20">
+                   Save Movie
+                 </button>
+               </div>
+             </div>
            </div>
         )}
       </div>
