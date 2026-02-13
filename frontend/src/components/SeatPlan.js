@@ -225,6 +225,33 @@ function SeatPlan({ movie }) {
           if (buyTickets) {
             setBookingStep('Generating ticket...');
             console.log('Booking successful!');
+            
+            // AI RECOMENDATION LOGIC: Save user preferences
+            try {
+              const currentPrefs = JSON.parse(localStorage.getItem('userPreferences')) || { genres: {}, languages: {} };
+              
+              // Update Genre counts
+              if (order.movie.genres) {
+                const genreList = Array.isArray(order.movie.genres) 
+                  ? order.movie.genres 
+                  : order.movie.genres.split(',').map(g => g.trim());
+                
+                genreList.forEach(g => {
+                  currentPrefs.genres[g] = (currentPrefs.genres[g] || 0) + 1;
+                });
+              }
+
+              // Update Language counts
+              if (order.movie.language) {
+                currentPrefs.languages[order.movie.language] = (currentPrefs.languages[order.movie.language] || 0) + 1;
+              }
+
+              localStorage.setItem('userPreferences', JSON.stringify(currentPrefs));
+              console.log('User preferences updated for AI recommendations:', currentPrefs);
+            } catch (err) {
+              console.error('Failed to update user preferences', err);
+            }
+
             setCompletedOrder(myOrder);
             setSuccessPopupVisible(true);
             setShowSuccess(true);

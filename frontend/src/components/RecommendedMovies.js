@@ -1,10 +1,9 @@
 import React, { useEffect, useState } from 'react';
 import FetchMoviesByGenre from '../API/FetchMoviesByGenre';
-import GetRecommendedMovies from '../API/GetRecommendedMovies';
-import { isLoggedIn } from '../utils/Auth';
 import RecommendedMovieCard from './RecommendedMovieCard';
 
-const genres = {
+// Map textual genres to TMDB IDs
+const genreMap = {
   Action: 28,
   Adventure: 12,
   Animation: 16,
@@ -12,6 +11,7 @@ const genres = {
   Family: 10751,
   Fantasy: 14,
   Mystery: 9648,
+  'Sci-Fi': 878,
   ScienceFiction: 878,
   Drama: 18,
   Horror: 27,
@@ -25,185 +25,82 @@ const genres = {
 
 const RecommendedMovies = () => {
   const [movies, setMovies] = useState([]);
-  const [page, setPage] = useState(1);
-  const [totalPages, setTotalPages] = useState(1);
-  const [, setRecommendedMovies] = useState([]);
-  const [userId, setUserId] = useState(null);
-  const [genreIds, setGenreIds] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
-  const userLoggedIn = isLoggedIn();
+  const [recommendationReason, setRecommendationReason] = useState('Based on popular demand');
 
   const ACCESS_TOKEN = process.env.REACT_APP_ACCESS_TOKEN || '';
 
   useEffect(() => {
-    const fetchMoviesByGenre = async () => {
+    const getRecommendations = async () => {
+      setLoading(true);
       try {
-        if (genreIds.length > 0) {
-          setLoading(true);
-          setError(null);
-          const response = await FetchMoviesByGenre(ACCESS_TOKEN, page, genreIds);
-          if (response) {
-            const { filteredMovies, totalPages } = response;
-            setMovies(filteredMovies || []);
-            setTotalPages(totalPages || 1);
+        // 1. Try to get user preferences from local storage
+        const prefs = JSON.parse(localStorage.getItem('userPreferences'));
+        let targetGenreIds = [];
+
+        if (prefs && prefs.genres) {
+          // Find top genres
+          const sortedGenres = Object.entries(prefs.genres)
+            .sort(([, a], [, b]) => b - a)
+            .map(([genre]) => genre);
+          
+          if (sortedGenres.length > 0) {
+            const topGenre = sortedGenres[0];
+            setRecommendationReason(`Because you like ${topGenre}`);
+            
+            // Convert top 3 genres to IDs
+            targetGenreIds = sortedGenres.slice(0, 3)
+              .map(g => genreMap[g] || genreMap[g.replace(' ', '')]) // Handle potential spacing differences
+              .filter(id => id); // Remove undefined
           }
         }
+
+        // 2. Fallback to Action/Comedy if no prefs
+        if (targetGenreIds.length === 0) {
+          targetGenreIds = [28, 35, 12]; // Action, Comedy, Adventure
+          setRecommendationReason('Trending Now');
+        }
+
+        // 3. Fetch movies
+        const response = await FetchMoviesByGenre(ACCESS_TOKEN, 1, targetGenreIds);
+        if (response && response.filteredMovies) {
+          // Shuffle and slice to show random 4 movies
+          const shuffled = response.filteredMovies.sort(() => 0.5 - Math.random());
+          setMovies(shuffled.slice(0, 4));
+        }
       } catch (err) {
-        console.error('Error fetching movies by genre:', err);
-        setError('Failed to load movies');
+        console.error('Failed to load recommendations', err);
       } finally {
         setLoading(false);
       }
     };
 
-    fetchMoviesByGenre();
-  }, [page, genreIds, ACCESS_TOKEN]);
+    getRecommendations();
+  }, [ACCESS_TOKEN]);
 
-  useEffect(() => {
-    const fetchRecommendedMovies = async () => {
-      try {
-        if (userId) {
-          setLoading(true);
-          setError(null);
-          const recommendedMoviesData = await GetRecommendedMovies(userId);
-          if (
-            recommendedMoviesData &&
-            recommendedMoviesData.movieGenres &&
-            Array.isArray(recommendedMoviesData.movieGenres) &&
-            recommendedMoviesData.movieGenres.length > 0
-          ) {
-            const recommendedGenres = Object.keys(genres).filter((genre) =>
-              recommendedMoviesData.movieGenres.includes(genre),
-            );
-            const recommendedGenreIds = recommendedGenres.map(
-              (genre) => genres[genre],
-            );
-            setRecommendedMovies(recommendedMoviesData);
-            setGenreIds(recommendedGenreIds);
-          } else {
-            console.log('No movie genres found for recommendations, using defaults');
-            // Set some default genres if no recommendations found
-            setGenreIds([28, 35, 18]); // Action, Comedy, Drama
-          }
-        } else {
-          // If no user is logged in, show default popular genres
-          console.log('No user logged in, using default genres');
-          setGenreIds([28, 35, 18]); // Action, Comedy, Drama
-        }
-      } catch (err) {
-        console.error('Error fetching recommended movies:', err);
-        setError('Failed to load recommendations');
-        // Fallback to default genres
-        setGenreIds([28, 35, 18]);
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    fetchRecommendedMovies();
-  }, [userId]);
-
-  useEffect(() => {
-    try {
-      if (userLoggedIn && userLoggedIn.userId) {
-        setUserId(userLoggedIn.userId);
-      } else {
-        setUserId(null);
-        // If no user is logged in, still initialize with default genres
-        setGenreIds([28, 35, 18]); // Action, Comedy, Drama
-        setLoading(false);
-      }
-    } catch (err) {
-      console.error('Error setting user ID:', err);
-      setUserId(null);
-      setGenreIds([28, 35, 18]);
-      setLoading(false);
-    }
-  }, [userLoggedIn]);
-
-  const handleNextPage = () => {
-    if (page < totalPages) {
-      setPage(page + 1);
-    }
-  };
-
-  const handlePrevPage = () => {
-    if (page > 1) {
-      setPage(page - 1);
-    }
-  };
-
-  const startIndex = page - 1;
-
-  const displayedMovies = movies.slice(startIndex, startIndex + 6);
-
-  if (loading) {
-    return (
-      <div className='container mx-auto pt-4'>
-        <div className='flex justify-center items-center py-8'>
-          <div className='animate-spin rounded-full h-8 w-8 border-b-2 border-red-600'></div>
-          <span className='ml-2 text-gray-600'>Loading movies...</span>
-        </div>
-      </div>
-    );
-  }
-
-  if (error) {
-    return (
-      <div className='container mx-auto pt-4'>
-        <div className='bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded'>
-          <p>{error}</p>
-        </div>
-      </div>
-    );
-  }
+  if (loading) return null; // Hide while loading to avoid layout jump
+  if (movies.length === 0) return null;
 
   return (
-    <div>
-      {movies && movies.length > 0 && (
-        <div className='container mx-auto pt-4'>
-          <h1 className='text-left font-bold pb-4'>
-            {userLoggedIn ? 'Recommended Movies' : 'Popular Movies'}
-          </h1>
-          <div className='grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4'>
-            {displayedMovies.map((movie, index) => (
-              <RecommendedMovieCard
-                key={movie.id}
-                movie={movie}
-                hallNumber={index}
-              />
-            ))}
-          </div>
-          <div className='flex justify-center mt-1'>
-            <button
-              onClick={handlePrevPage}
-              className={`bg-red-500 hover:bg-red-700 text-white rounded px-3 py-1 text-sm font-semibold mx-2 my-2 cursor-pointer ${
-                page === 1 ? 'opacity-50 cursor-not-allowed' : ''
-              }`}
-              disabled={page === 1}
-            >
-              Previous
-            </button>
-            <button
-              onClick={handleNextPage}
-              className={`bg-red-500 hover:bg-red-700 text-white rounded px-3 py-1 text-sm font-semibold mx-2 my-2 cursor-pointer ${
-                page === totalPages ? 'opacity-50 cursor-not-allowed' : ''
-              }`}
-              disabled={page === totalPages}
-            >
-              Next
-            </button>
-          </div>
+    <div className="mb-12 animate-fade-in">
+      <div className="flex items-center justify-between mb-6 px-4">
+        <div>
+          <h2 className="text-2xl font-display font-bold text-cinema-gold flex items-center gap-2">
+            <span className="text-3xl">✨</span> Recommended For You
+          </h2>
+          <p className="text-cinema-gray text-sm mt-1 border-l-2 border-cinema-red pl-2">
+            {recommendationReason}
+          </p>
         </div>
-      )}
-      {!loading && movies.length === 0 && (
-        <div className='container mx-auto pt-4'>
-          <div className='text-center py-8'>
-            <p className='text-gray-600'>No movies available at the moment.</p>
+      </div>
+
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 px-4">
+        {movies.map((movie, index) => (
+          <div key={movie.id} className="transform hover:-translate-y-2 transition-transform duration-300">
+             <RecommendedMovieCard movie={movie} hallNumber={index} />
           </div>
-        </div>
-      )}
+        ))}
+      </div>
     </div>
   );
 };
