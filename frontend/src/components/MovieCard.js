@@ -31,12 +31,20 @@ const MovieCard = ({ movie, hallNumber }) => {
             e.target.src = 'https://via.placeholder.com/300x450/1e293b/94a3b8?text=No+Image';
           }}
         />
-        {/* Overlay gradient */}
-        <div className="absolute inset-0 bg-gradient-to-t from-cinema-black via-transparent to-transparent opacity-60"></div>
+        {/* Overlay gradient and Actions */}
+        <div className="absolute inset-0 bg-gradient-to-t from-cinema-black via-cinema-black/40 to-transparent opacity-80 group-hover:opacity-100 transition-opacity duration-300"></div>
+
+        {/* Book Now Button (Slide Up) */}
+        <div className="absolute bottom-0 left-0 right-0 p-4 transform translate-y-full group-hover:translate-y-0 transition-transform duration-300 flex justify-center z-10">
+          <button className="bg-cinema-red hover:bg-red-700 text-white font-bold py-2 px-6 rounded-full shadow-lg shadow-cinema-red/30 transform transition hover:scale-105 active:scale-95 flex items-center space-x-2">
+            <span>🎟️</span>
+            <span>Book Ticket</span>
+          </button>
+        </div>
         
         {/* Rating Badge */}
         {movie.vote_average && movie.vote_average > 0 && (
-          <div className='absolute top-3 right-3 bg-cinema-black/80 backdrop-blur-md text-cinema-gold px-2 py-1 rounded-lg text-xs font-bold border border-cinema-gold/30 flex items-center gap-1'>
+          <div className='absolute top-3 right-3 bg-cinema-black/80 backdrop-blur-md text-cinema-gold px-2 py-1 rounded-lg text-xs font-bold border border-cinema-gold/30 flex items-center gap-1 shadow-lg'>
             <span>⭐</span> {movie.vote_average.toFixed(1)}
           </div>
         )}
