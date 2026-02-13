@@ -3,34 +3,12 @@ import { BrowserRouter, Route, Routes } from 'react-router-dom';
 import './App.css';
 import Footer from './layout/Footer';
 import NavBar from './layout/NavBar';
-import Home from './pages/Home';
-import MovieDetails from './pages/MovieDetails';
-import { isLoggedIn, login, logout } from './utils/Auth';
+import ChatBot from './components/ChatBot';
+
+// ... (existing imports)
 
 function App() {
-  const [searchText, setSearchText] = useState('');
-  const [user, setUser] = useState(null);
-
-  useEffect(() => {
-    const loggedInUser = isLoggedIn();
-    if (loggedInUser) {
-      setUser(loggedInUser);
-    }
-  }, []);
-
-  const handleSearch = (searchQuery) => {
-    setSearchText(searchQuery);
-  };
-
-  const handleLogin = (userData) => {
-    setUser(userData);
-    login(userData);
-  };
-
-  const handleLogout = () => {
-    setUser(null);
-    logout();
-  };
+  // ... (existing code)
 
   return (
     <div className='min-h-screen flex flex-col bg-cinema-black text-cinema-white font-sans'>
@@ -50,6 +28,7 @@ function App() {
             <Route path='/movie/:id' element={<MovieDetails />} />
           </Routes>
         </div>
+        <ChatBot /> {/* AI Assistant */}
         <Footer />
       </BrowserRouter>
     </div>
