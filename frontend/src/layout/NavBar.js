@@ -18,52 +18,65 @@ function NavBar({ user, onSearch, onLogin, onLogout }) {
 
   return (
     <div>
-      <div className='navbar flex flex-col lg:flex-row container mx-auto py-4 bg-cinema-black/95 backdrop-blur-sm shadow-xl relative z-50 border-b border-cinema-dark/50'>
-        <div className='mx-5 mb-2 lg:mb-0'>
+      <div className='navbar flex flex-col lg:flex-row container mx-auto py-4 px-6 bg-cinema-black/90 backdrop-blur-md shadow-2xl relative z-50 border-b border-cinema-gold/10 sticky top-0 transition-all duration-300'>
+        <div className='flex justify-between items-center w-full lg:w-auto mb-4 lg:mb-0'>
           <a
-            className='text-3xl font-display font-bold text-transparent bg-clip-text bg-gradient-to-r from-cinema-gold to-cinema-red hover:to-cinema-gold transition-all duration-300'
+            className='text-3xl md:text-4xl font-display font-bold tracking-tight'
             href='/'
           >
-            CinemaMate
+            <span className="text-transparent bg-clip-text bg-gradient-to-r from-cinema-gold via-yellow-200 to-cinema-gold drop-shadow-sm">Cinema</span>
+            <span className="text-cinema-red">Mate</span>
           </a>
+          
+          {/* Mobile Menu Toggle could act here if implemented */}
         </div>
-        <div className='flex-grow lg:flex lg:justify-end items-center'>
-          <Search onSearch={onSearch} />
+
+        <div className='flex-grow lg:flex lg:justify-end items-center gap-4'>
+          <div className="w-full lg:w-auto transform transition-all focus-within:scale-105">
+            <Search onSearch={onSearch} />
+          </div>
         </div>
-        <div className='flex flex-col lg:flex-row justify-center items-center mr-5'>
-          <div className='lg:flex lg:justify-center min-[200px]:space-x-2 sm:space-x-2 lg:space-x-2'>
+
+        <div className='flex flex-col lg:flex-row justify-center items-center lg:ml-6 mt-4 lg:mt-0'>
+          <div className='flex items-center space-x-3'>
             {/* QR Scanner - Available to all users */}
             <button
-              className='bg-cinema-dark text-cinema-gray hover:text-white hover:bg-cinema-red/20 rounded-lg px-3 py-2 text-sm font-semibold cursor-pointer h-9 border border-cinema-gray/20 transition-all duration-200 flex items-center space-x-2 group'
+              className='group flex items-center space-x-2 bg-cinema-dark/50 hover:bg-cinema-dark text-cinema-gray hover:text-cinema-gold border border-cinema-gray/20 hover:border-cinema-gold/30 rounded-full px-4 py-2 transition-all duration-300'
               onClick={() => setShowQRScanner(true)}
               title="Scan Ticket QR Code"
             >
-              <span className="group-hover:scale-110 transition-transform">📱</span>
-              <span>Scan QR</span>
+              <span className="group-hover:scale-110 transition-transform duration-300">📱</span>
+              <span className="font-medium text-sm">Scan QR</span>
             </button>
 
             {user ? (
-              <button
-                className='bg-cinema-red text-white hover:bg-red-700 rounded-lg px-4 py-2 text-sm font-semibold cursor-pointer h-9 shadow-lg shadow-cinema-red/20 transition-all duration-200'
-                onClick={handleLogout}
-              >
-                Logout
-              </button>
-            ) : (
-              <>
+              <div className="flex items-center gap-3">
+                <div className="hidden md:block text-right">
+                  <p className="text-xs text-cinema-gray">Logged in as</p>
+                  <p className="text-sm font-bold text-cinema-gold">{user.userName}</p>
+                </div>
                 <button
-                  className='text-cinema-gray hover:text-white font-medium px-4 py-2 text-sm transition-colors duration-200'
+                  className='bg-gradient-to-r from-cinema-red to-red-700 text-white shadow-lg shadow-cinema-red/20 hover:shadow-cinema-red/40 rounded-full px-5 py-2 text-sm font-bold tracking-wide transition-all duration-300 transform hover:-translate-y-0.5'
+                  onClick={handleLogout}
+                >
+                  Logout
+                </button>
+              </div>
+            ) : (
+              <div className="flex items-center space-x-3">
+                <button
+                  className='text-cinema-gray hover:text-cinema-white font-medium px-4 py-2 text-sm transition-colors duration-200'
                   onClick={() => setShowLoginForm(true)}
                 >
                   Login
                 </button>
                 <button
-                  className='bg-gradient-to-r from-cinema-red to-red-600 text-white hover:shadow-lg hover:shadow-cinema-red/30 rounded-lg px-5 py-2 text-sm font-semibold cursor-pointer h-9 transition-all duration-200'
+                  className='bg-gradient-to-r from-cinema-gold to-orange-500 text-cinema-black hover:text-black shadow-lg shadow-cinema-gold/20 hover:shadow-cinema-gold/40 rounded-full px-6 py-2 text-sm font-bold tracking-wide transition-all duration-300 transform hover:-translate-y-0.5'
                   onClick={() => setShowRegistrationForm(true)}
                 >
                   Sign Up
                 </button>
-              </>
+              </div>
             )}
           </div>
         </div>
