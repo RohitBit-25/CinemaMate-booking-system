@@ -145,5 +145,5 @@ cinema-ticket-booking-system/
 ```
 
 ## 👨‍💻 Developer
-**Developed with ❤️ by [Mahima]**
+**Developed with ❤️ by [Rohit Singh Chouhan]**
 *Empowering Cinema with AI*
