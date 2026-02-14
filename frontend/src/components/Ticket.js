@@ -12,14 +12,14 @@ function Ticket({ order, onClose }) {
       try {
         // Create a unique ticket data object for QR code
         const ticketData = {
-          bookingId: `IHS${order.customerId}`,
+          bookingId: `CM${order.customerId}`,
           movieTitle: order.movieTitle || order.movie?.title,
           customerName: order.userName || 'Guest',
           seats: order.seat || [],
           movieId: order.movieId,
           orderDate: order.orderDate,
           totalAmount: order.moviePrice || order.movie?.price,
-          cinemaName: 'IndiaHallShow',
+          cinemaName: 'CinemaMate',
           verification: 'VALID_TICKET'
         };
 
@@ -83,16 +83,19 @@ function Ticket({ order, onClose }) {
     <div className="fixed inset-0 bg-black bg-opacity-75 flex items-center justify-center z-50 p-4 animate-fade-in">
       <div className="bg-white rounded-3xl shadow-2xl max-w-md w-full mx-4 overflow-hidden transform transition-all animate-bounce-in">
         {/* Ticket Header */}
-        <div className="bg-gradient-to-r from-red-600 to-red-700 text-white px-6 py-8 text-center relative">
+        <div className="bg-gradient-to-r from-cinema-red to-red-800 text-white px-6 py-6 text-center relative overflow-hidden">
+          <div className="absolute top-0 left-0 w-full h-full bg-[url('https://www.transparenttextures.com/patterns/cubes.png')] opacity-10"></div>
           <button 
             onClick={onClose}
-            className="absolute top-4 right-4 text-white hover:text-gray-200 text-2xl font-bold"
+            className="absolute top-4 right-4 text-white/80 hover:text-white text-2xl font-bold transition-colors z-10"
           >
             ×
           </button>
-          <div className="text-3xl mb-2">🎬</div>
-          <h2 className="text-2xl font-bold mb-1">IndiaHallShow</h2>
-          <p className="text-red-100 text-sm">Your Ticket is Confirmed!</p>
+          <div className="text-4xl mb-2 drop-shadow-md relative z-10">🎬</div>
+          <h2 className="text-3xl font-display font-bold mb-1 tracking-wide drop-shadow-sm relative z-10">
+            <span className="text-cinema-gold">Cinema</span>Mate
+          </h2>
+          <p className="text-white/90 text-sm font-medium tracking-wider uppercase relative z-10">Admit One</p>
         </div>
 
         {/* Ticket Body */}
@@ -114,29 +117,29 @@ function Ticket({ order, onClose }) {
           {/* Booking Details */}
           <div className="space-y-3">
             <div className="flex justify-between items-center">
-              <span className="text-gray-600">Date & Time:</span>
+              <span className="text-gray-900 font-medium">Date & Time:</span>
               <div className="text-right">
-                <div className="font-semibold">{formatDate(order.orderDate)}</div>
-                <div className="text-sm text-gray-500">{formatTime(order.orderDate)}</div>
+                <div className="font-bold text-gray-900">{formatDate(order.orderDate)}</div>
+                <div className="text-sm text-gray-700">{formatTime(order.orderDate)}</div>
               </div>
             </div>
 
             <div className="flex justify-between items-center">
-              <span className="text-gray-600">Seats:</span>
-              <span className="font-semibold text-red-600">
+              <span className="text-gray-900 font-medium">Seats:</span>
+              <span className="font-bold text-red-600">
                 {order.seat.map(s => s + 1).join(', ')}
               </span>
             </div>
 
             <div className="flex justify-between items-center">
-              <span className="text-gray-600">Customer:</span>
-              <span className="font-semibold">{order.userName || 'Guest'}</span>
+              <span className="text-gray-900 font-medium">Customer:</span>
+              <span className="font-bold text-gray-900">{order.userName || 'Guest'}</span>
             </div>
 
             <div className="flex justify-between items-center">
-              <span className="text-gray-600">Booking ID:</span>
-              <span className="font-mono text-sm bg-gray-100 px-2 py-1 rounded">
-                IHS{order.customerId}
+              <span className="text-gray-900 font-medium">Booking ID:</span>
+              <span className="font-mono text-sm bg-gray-200 px-2 py-1 rounded text-gray-900 font-bold">
+                CM{order.customerId}
               </span>
             </div>
           </div>
@@ -198,7 +201,7 @@ function Ticket({ order, onClose }) {
               <div className="mt-3">
                 <a
                   href={qrCodeUrl}
-                  download={`IndiaHallShow-Ticket-${order.customerId}.png`}
+                  download={`CinemaMate-Ticket-${order.customerId}.png`}
                   className="inline-block bg-blue-600 hover:bg-blue-700 text-white text-xs px-3 py-1 rounded-full transition-colors duration-200"
                 >
                   💾 Save QR Code
@@ -222,7 +225,7 @@ function Ticket({ order, onClose }) {
         {/* Footer */}
         <div className="bg-gray-50 px-6 py-4 text-center">
           <p className="text-xs text-gray-500">
-            Thank you for booking with IndiaHallShow!
+            Thank you for booking with CinemaMate!
           </p>
           <p className="text-xs text-gray-400 mt-1">
             Please arrive 15 minutes before show time

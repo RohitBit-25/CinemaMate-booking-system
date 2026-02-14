@@ -17,10 +17,17 @@ public class TicketVerificationController {
             // Extract ticket information
             String bookingId = (String) ticketData.get("bookingId");
             String verification = (String) ticketData.get("verification");
-            String cinemaName = (String) ticketData.get("cinemaName");
+            // String cinemaName = (String) ticketData.get("cinemaName"); // Removed unused variable
             
             // Basic validation
-            if (bookingId != null && "VALID_TICKET".equals(verification) && "IndiaHallShow".equals(cinemaName)) {
+            if (bookingId != null && "VALID_TICKET".equals(verification)) {
+                // Check for valid cinema name
+                if (!"CinemaMate".equals(ticketData.get("cinemaName"))) {
+                    response.put("valid", false);
+                    response.put("message", "Invalid Cinema Name");
+                    response.put("status", "INVALID_CINEMA");
+                    return ResponseEntity.badRequest().body(response);
+                }
                 response.put("valid", true);
                 response.put("message", "Ticket is valid and verified");
                 response.put("ticketInfo", ticketData);

@@ -1,4 +1,5 @@
 ﻿import React, { useState } from 'react';
+import { Link } from 'react-router-dom';
 import LoginForm from '../components/LoginForm';
 import RegistrationForm from '../components/RegistrationForm';
 import QRScanner from '../components/QRScanner';
@@ -18,17 +19,27 @@ function NavBar({ user, onSearch, onLogin, onLogout }) {
 
   return (
     <div>
-      <div className='navbar flex flex-col lg:flex-row container mx-auto py-4 px-6 bg-cinema-black/90 backdrop-blur-md shadow-2xl relative z-50 border-b border-cinema-gold/10 sticky top-0 transition-all duration-300'>
+      <div className='navbar flex flex-col lg:flex-row container mx-auto py-4 px-6 bg-cinema-black/80 backdrop-blur-xl shadow-2xl relative z-50 border-b border-white/5 sticky top-0 transition-all duration-300'>
+        {/* Gradient Line at the bottom for premium feel */}
+        <div className="absolute bottom-0 left-0 w-full h-[1px] bg-gradient-to-r from-transparent via-cinema-gold/30 to-transparent"></div>
+        
         <div className='flex justify-between items-center w-full lg:w-auto mb-4 lg:mb-0'>
-          <a
-            className='text-3xl md:text-4xl font-display font-bold tracking-tight'
-            href='/'
-          >
-            <span className="text-transparent bg-clip-text bg-gradient-to-r from-cinema-gold via-yellow-200 to-cinema-gold drop-shadow-sm">Cinema</span>
-            <span className="text-cinema-red">Mate</span>
-          </a>
-          
+          <Link to='/' className='flex items-center space-x-2'>
+            <div className="text-3xl animate-bounce">🎬</div>
+            <h1 className='text-3xl font-display font-bold tracking-tight'>
+              <span className="text-transparent bg-clip-text bg-gradient-to-r from-cinema-gold via-yellow-200 to-cinema-gold drop-shadow-sm">Cinema</span>
+              <span className="text-cinema-red">Mate</span>
+            </h1>
+          </Link>  
           {/* Mobile Menu Toggle could act here if implemented */}
+        </div>
+
+        {/* Desktop Navigation */}
+        <div className='hidden lg:flex space-x-8 items-center mx-8'>
+          <Link to='/' className='text-gray-300 hover:text-cinema-gold transition-colors font-medium text-sm tracking-wide uppercase'>Home</Link>
+          <Link to='/coming-soon' className='text-gray-300 hover:text-cinema-gold transition-colors font-medium text-sm tracking-wide uppercase'>Movies</Link>
+          <Link to='/offers' className='text-gray-300 hover:text-cinema-gold transition-colors font-medium text-sm tracking-wide uppercase'>Offers</Link>
+          <Link to='/support' className='text-gray-300 hover:text-cinema-gold transition-colors font-medium text-sm tracking-wide uppercase'>Support</Link>
         </div>
 
         <div className='flex-grow lg:flex lg:justify-end items-center gap-4'>
@@ -41,7 +52,7 @@ function NavBar({ user, onSearch, onLogin, onLogout }) {
           <div className='flex items-center space-x-3'>
             {/* QR Scanner - Available to all users */}
             <button
-              className='group flex items-center space-x-2 bg-cinema-dark/50 hover:bg-cinema-dark text-cinema-gray hover:text-cinema-gold border border-cinema-gray/20 hover:border-cinema-gold/30 rounded-full px-4 py-2 transition-all duration-300'
+              className='group flex items-center space-x-2 bg-cinema-dark hover:bg-cinema-gold/10 text-cinema-white hover:text-cinema-gold border border-cinema-gray/30 hover:border-cinema-gold/50 rounded-full px-4 py-2 transition-all duration-300 shadow-md shadow-black/20'
               onClick={() => setShowQRScanner(true)}
               title="Scan Ticket QR Code"
             >
@@ -126,7 +137,7 @@ function NavBar({ user, onSearch, onLogin, onLogout }) {
             <div className='bg-gradient-to-r from-green-500 to-green-600 text-white px-6 py-6 text-center'>
               <div className='text-6xl mb-3'>🎉</div>
               <h2 className='text-2xl font-bold mb-1'>Ticket Verified Successfully!</h2>
-              <p className='text-green-100 text-sm'>Entry approved for IndiaHallShow Cinema</p>
+              <p className='text-green-100 text-sm'>Entry approved for CinemaMate</p>
             </div>
 
             {/* Ticket Details */}
@@ -138,10 +149,6 @@ function NavBar({ user, onSearch, onLogin, onLogout }) {
               </div>
 
               <div className='bg-gray-50 rounded-lg p-4 space-y-3'>
-                <div className='flex justify-between items-center'>
-                  <span className='text-gray-600 font-medium'>Customer:</span>
-                  <span className='font-bold text-gray-800'>{scanResult.customerName}</span>
-                </div>
                 <div className='flex justify-between items-center'>
                   <span className='text-gray-600 font-medium'>Booking ID:</span>
                   <span className='font-mono text-sm bg-blue-100 px-2 py-1 rounded text-blue-800'>

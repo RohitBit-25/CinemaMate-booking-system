@@ -41,15 +41,15 @@ function QRScanner({ onScanResult, onClose }) {
   const simulateQRScan = async () => {
     try {
       // Create a mock ticket data that would be in a QR code
-      const mockTicketData = {
-        bookingId: `IHS${Math.floor(Math.random() * 1000000)}`,
+        const mockTicketData = {
+        bookingId: `CM${Math.floor(Math.random() * 1000000)}`,
         movieTitle: 'Sample Movie',
         customerName: 'John Doe',
         seats: [1, 2],
         movieId: 12345,
         orderDate: new Date().toISOString(),
         totalAmount: 500,
-        cinemaName: 'IndiaHallShow',
+        cinemaName: 'CinemaMate',
         verification: 'VALID_TICKET'
       };
 
@@ -85,14 +85,14 @@ function QRScanner({ onScanResult, onClose }) {
     setError('');
 
     const mockData = {
-      bookingId: `IHS${Math.floor(Math.random() * 1000000)}`,
+      bookingId: `CM${Math.floor(Math.random() * 1000000)}`,
       movieTitle: 'Test Movie',
       customerName: 'Test User',
       seats: [5, 6],
       movieId: 54321,
       orderDate: new Date().toISOString(),
       totalAmount: 750,
-      cinemaName: 'IndiaHallShow',
+      cinemaName: 'CinemaMate',
       verification: 'VALID_TICKET'
     };
     
@@ -202,7 +202,7 @@ function QRScanner({ onScanResult, onClose }) {
               <div className="text-center">
                 <div className="text-6xl mb-3 animate-bounce">🎉</div>
                 <h3 className="text-2xl font-bold text-green-600 mb-2">Ticket Verified Successfully!</h3>
-                <p className="text-green-700 font-medium">✅ Entry Approved for IndiaHallShow Cinema</p>
+                <p className="text-green-700 font-medium">✅ Entry Approved for CinemaMate</p>
                 <div className="mt-2 flex justify-center">
                   <div className="bg-green-100 text-green-800 px-3 py-1 rounded-full text-sm font-semibold">
                     VALID TICKET

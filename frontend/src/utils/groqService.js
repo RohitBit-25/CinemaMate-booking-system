@@ -31,7 +31,7 @@ export const getGroqResponse = async (userMessage, context = "") => {
             content: userMessage,
           },
         ],
-        model: "llama3-8b-8192", // Fast and efficient model
+        model: "llama-3.1-8b-instant", // Fast and efficient model
         temperature: 0.7,
         max_tokens: 150,
       })

@@ -12,13 +12,14 @@ import java.util.Map;
 import java.util.Optional;
 
 @RestController
+@CrossOrigin(origins = "*")
 public class CinemaHallController {
 
     @Autowired
     private CinemaHallRepository cinemaHallRepository;
 
     @GetMapping("/api/v1/movie/{movieId}/{movieSession}")
-    public ResponseEntity<?> getUpdatedSeats(@PathVariable Long movieId, @PathVariable String movieSession) {
+    public ResponseEntity<?> getUpdatedSeats(@PathVariable("movieId") Long movieId, @PathVariable("movieSession") String movieSession) {
         Optional<CinemaHall> cinemaHallOptional = cinemaHallRepository.findByMovieIdAndMovieSession(movieId, movieSession);
         if (cinemaHallOptional.isPresent()) {
             CinemaHall cinemaHall = cinemaHallOptional.get();
@@ -30,7 +31,7 @@ public class CinemaHallController {
     }
 
     @PutMapping("/api/v1/movie/{movieId}/{movieSession}")
-    public ResponseEntity<?> updateOccupiedSeats(@PathVariable Long movieId, @PathVariable String movieSession, @RequestBody CinemaHallUpdateDTO updateDTO) {
+    public ResponseEntity<?> updateOccupiedSeats(@PathVariable("movieId") Long movieId, @PathVariable("movieSession") String movieSession, @RequestBody CinemaHallUpdateDTO updateDTO) {
         try {
             Optional<CinemaHall> cinemaHallOptional = cinemaHallRepository.findByMovieIdAndMovieSession(movieId, movieSession);
             CinemaHall cinemaHall = cinemaHallOptional.orElseGet(CinemaHall::new);

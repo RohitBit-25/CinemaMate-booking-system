@@ -4,12 +4,13 @@ module.exports = {
   theme: {
     extend: {
       colors: {
-        'cinema-black': '#0f172a',    // Slate 900
-        'cinema-dark': '#1e293b',     // Slate 800
-        'cinema-gold': '#f59e0b',     // Amber 500
-        'cinema-red': '#e11d48',      // Rose 600
-        'cinema-white': '#f8fafc',    // Slate 50
-        'cinema-gray': '#94a3b8',     // Slate 400
+        'cinema-black': '#0a0a0a',    // Deep black for better contrast
+        'cinema-dark': '#1a1a1a',     // Rich dark gray for cards
+        'cinema-gold': '#fbbf24', // Amber 400
+        'cinema-red': '#dc2626', // Red 600
+        'cinema-white': '#f3f4f6', // Gray 100
+        'cinema-gray': '#e5e7eb', // Gray 200 (Lightened from Gray 400 for better visibility)
+        'cinema-gray-dark': '#9ca3af', // Gray 400 (New: for subtle text)
       },
       fontFamily: {
         sans: ['Inter', 'sans-serif'],

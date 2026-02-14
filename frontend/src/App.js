@@ -4,20 +4,44 @@ import './App.css';
 import Footer from './layout/Footer';
 import NavBar from './layout/NavBar';
 import ChatBot from './components/ChatBot';
-import AdminDashboard from './pages/AdminDashboard'; // Import Admin Dashboard
-
-// ... (existing imports)
+import AdminDashboard from './pages/AdminDashboard';
+import Home from './pages/Home';
+import MovieDetails from './pages/MovieDetails';
+import Offers from './pages/Offers';
+import ComingSoon from './pages/ComingSoon';
+import Support from './pages/Support';
 
 function App() {
-  // ... (existing code)
+  const [user, setUser] = useState(null);
+  const [searchText, setSearchText] = useState('');
+
+  useEffect(() => {
+    const storedUser = localStorage.getItem('user');
+    if (storedUser) {
+      setUser(JSON.parse(storedUser));
+    }
+  }, []);
+
+  const handleLogin = (user) => {
+    setUser(user);
+    localStorage.setItem('user', JSON.stringify(user));
+  };
+
+  const handleLogout = () => {
+    setUser(null);
+    localStorage.removeItem('user');
+    localStorage.removeItem('userPreferences');
+  };
+
+  const handleSearch = (text) => {
+    setSearchText(text);
+  };
 
   return (
     <div className='min-h-screen flex flex-col bg-cinema-black text-cinema-white font-sans'>
       <BrowserRouter>
         <Routes>
-          {/* Admin Route - Separate from main layout if desired, but here keeping inside for simplicity, 
-              though typically Admin would have its own layout without standard Navbar/Footer. 
-              For now, let's keep it simple. */}
+          {/* Admin Route */}
           <Route path='/admin' element={<AdminDashboard />} />
 
           {/* Main App Routes */}
@@ -31,15 +55,18 @@ function App() {
                   onLogin={handleLogin}
                   onLogout={handleLogout}
                 />
-                <div className="flex-grow">
-                  <Routes>
-                    <Route
-                      path='/'
-                      element={<Home searchText={searchText} user={user} />}
-                    />
-                    <Route path='/movie/:id' element={<MovieDetails />} />
-                  </Routes>
-                </div>
+                  <div className="flex-grow">
+                   <Routes>
+                     <Route
+                       path='/'
+                       element={<Home searchText={searchText} setSearchText={handleSearch} user={user} />}
+                     />
+                     <Route path='/movie/:id' element={<MovieDetails />} />
+                     <Route path='/offers' element={<Offers />} />
+                     <Route path='/coming-soon' element={<ComingSoon />} />
+                     <Route path='/support' element={<Support />} />
+                   </Routes>
+                 </div>
                 <ChatBot />
                 <Footer />
               </>
@@ -50,5 +77,6 @@ function App() {
     </div>
   );
 }
+
 
 export default App;

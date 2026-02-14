@@ -9,7 +9,7 @@ import SeatSelector from './SeatSelector';
 import SeatShowcase from './SeatShowcase';
 import Ticket from './Ticket';
 
-// Indian cinema seat categories like IndiaHallShow
+// Indian cinema seat categories like CinemaMate
 const seatCategories = {
   premium: { price: 300, color: 'bg-yellow-400', name: 'Premium', rows: [0, 1] },
   gold: { price: 250, color: 'bg-orange-400', name: 'Gold', rows: [2, 3, 4] },
@@ -116,7 +116,7 @@ function SeatPlan({ movie }) {
     selectedSeatText = selectedSeats.map((seat) => seat + 1).join(', ');
   }
 
-  // Calculate pricing breakdown like IndiaHallShow
+  // Calculate pricing breakdown like CinemaMate
   const basePrice = selectedSeats.reduce((total, seatNumber) => {
     return total + getSeatPrice(seatNumber);
   }, 0);
@@ -403,22 +403,22 @@ function SeatPlan({ movie }) {
                 </div>
 
                 {/* Price Breakdown */}
-                <div className="bg-cinema-black/30 p-4 rounded-xl space-y-3">
+                <div className="bg-cinema-white/5 p-4 rounded-xl space-y-3 border border-cinema-white/10">
                   <div className="flex justify-between text-sm text-cinema-gray">
                     <span>Tickets ({selectedSeats.length})</span>
-                    <span>₹{basePrice}</span>
+                    <span className="text-cinema-white">₹{basePrice}</span>
                   </div>
                   <div className="flex justify-between text-sm text-cinema-gray">
                     <span>Convenience Fee</span>
-                    <span>₹{convenienceFee}</span>
+                    <span className="text-cinema-white">₹{convenienceFee}</span>
                   </div>
                   <div className="flex justify-between text-sm text-cinema-gray">
                     <span>Handling Charges</span>
-                    <span>₹{handlingCharges}</span>
+                    <span className="text-cinema-white">₹{handlingCharges}</span>
                   </div>
                   <div className="flex justify-between text-sm text-cinema-gray">
                     <span>GST (18%)</span>
-                    <span>₹{taxes}</span>
+                    <span className="text-cinema-white">₹{taxes}</span>
                   </div>
                   <div className="border-t border-cinema-gray/20 my-2 pt-2 flex justify-between font-bold text-lg items-center">
                     <span className="text-cinema-white">Total Amount</span>
